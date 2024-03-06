@@ -11,12 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.ProblemDetail;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.sql.DataSource;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -65,5 +69,18 @@ public class AppConfig {
     interface MixIn {
         @JsonAnyGetter
         Map<String, Object> getProperties();
+    }
+
+    @Profile("test")
+    @Bean(name = "dataSource")
+    public DataSource dataSourceForTest() {
+        return
+                new EmbeddedDatabaseBuilder()
+                        .setType(EmbeddedDatabaseType.H2)
+                        .setName("testDB;MODE=PostgreSQL;NON_KEYWORDS=VALUE")
+                        .setScriptEncoding("UTF-8")
+                        .addScript("classpath:db/schema-test.sql")
+                        .addScript("classpath:db/data-test.sql")
+                        .build();
     }
 }
