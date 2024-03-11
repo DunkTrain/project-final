@@ -1,30 +1,26 @@
-## [REST API](http://localhost:8080/doc)
+# project-final JavaRush
+***
+### JiraRush
+Финальный проект JavaRush University
 
-## Концепция:
-
-- Spring Modulith
-    - [Spring Modulith: достигли ли мы зрелости модульности](https://habr.com/ru/post/701984/)
-    - [Introducing Spring Modulith](https://spring.io/blog/2022/10/21/introducing-spring-modulith)
-    - [Spring Modulith - Reference documentation](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/)
-
+#### Запуск
 ```
-  url: jdbc:postgresql://localhost:5432/jira
-  username: jira
-  password: JiraRush
+docker run -p 5432:5432 --name postgres-db -e POSTGRES_USER=jira -e POSTGRES_PASSWORD=JiraRush -e POSTGRES_DB=jira -e PGDATA=/var/lib/postgresql/data/pgdata -v ./pgdata:/var/lib/postgresql/data -d postgres
+docker run -p 5433:5432 --name postgres-db-test -e POSTGRES_USER=jira -e POSTGRES_PASSWORD=JiraRush -e POSTGRES_DB=jira-test -e PGDATA=/var/lib/postgresql/data/pgdata -v ./pgdata-test:/var/lib/postgresql/data -d postgres
 ```
+```
+mvn clean install -DskipTests
+docker build -t javarush-jira .
+docker run -p 8080:8080 --name javarush-jira -d javarush-jira
+```
+http://localhost:8080/
 
-- Есть 2 общие таблицы, на которых не fk
-    - _Reference_ - справочник. Связь делаем по _code_ (по id нельзя, тк id привязано к окружению-конкретной базе)
-    - _UserBelong_ - привязка юзеров с типом (owner, lead, ...) к объекту (таска, проект, спринт, ...). FK вручную будем
-      проверять
+http://localhost:8080/swagger-ui/index.html
 
-## Аналоги
+Учетная запись администратора JiraRush:
 
-- https://java-source.net/open-source/issue-trackers
-
-## Тестирование
-
-- https://habr.com/ru/articles/259055/
+admin@gmail.com  
+admin
 
 ### Список выполненных задач:
 
